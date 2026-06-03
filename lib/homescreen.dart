@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+
 import 'favorite/favorite_logic.dart';
 import 'async_module/api_provider.dart';
 import 'models/product_model.dart';
@@ -17,11 +19,12 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late final Future<List<ProductModel>> _productsFuture;
   String selectedCategory = 'All Products';
+  int currentBanner = 0;
 
   static const Map<String, String> categoryMap = {
     'All Products': '',
-    'Men\'s': "men's clothing",
-    'Women\'s': "women's clothing",
+    "Men's": "men's clothing",
+    "Women's": "women's clothing",
     'Jewelry': 'jewelery',
     'Electronics': 'electronics',
   };
@@ -32,16 +35,22 @@ class _HomeScreenState extends State<HomeScreen> {
     _productsFuture = ApiProvider.fetchProducts();
   }
 
+  List<ProductModel> _getBannerProducts(List<ProductModel> products) {
+    final categories = ["men's clothing", "women's clothing", "jewelery", "electronics"];
+    final List<ProductModel> featured = [];
+    for (final cat in categories) {
+      final match = products.where((p) => p.category == cat).toList();
+      if (match.isNotEmpty) featured.add(match.first);
+    }
+    return featured.isEmpty ? products.take(4).toList() : featured;
+  }
+
   Widget _buildCategoryButton(String label) {
     final selected = selectedCategory == label;
     return Padding(
       padding: const EdgeInsets.only(right: 12),
       child: OutlinedButton(
-        onPressed: () {
-          setState(() {
-            selectedCategory = label;
-          });
-        },
+        onPressed: () => setState(() => selectedCategory = label),
         style: OutlinedButton.styleFrom(
           backgroundColor: selected ? Colors.deepPurple : Colors.white,
           foregroundColor: selected ? Colors.white : Colors.black,
@@ -67,7 +76,6 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text("Products"),
         actions: const [DarkModeToggleButton()],
       ),
-
       body: FutureBuilder<List<ProductModel>>(
         future: _productsFuture,
         builder: (context, snapshot) {
@@ -80,77 +88,203 @@ class _HomeScreenState extends State<HomeScreen> {
           }
 
           final products = snapshot.data!;
+          final bannerProducts = _getBannerProducts(products);
           final filteredProducts = selectedCategory == 'All Products'
               ? products
               : products
-                    .where(
-                      (product) =>
-                          product.category == categoryMap[selectedCategory],
-                    )
-                    .toList();
+                  .where((p) => p.category == categoryMap[selectedCategory])
+                  .toList();
 
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 16),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  children: categoryMap.keys
-                      .map((label) => _buildCategoryButton(label))
-                      .toList(),
+          return CustomScrollView(
+            slivers: [
+              // ── Banner ────────────────────────────────────────────────
+              SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 16),
+                    CarouselSlider(
+                      options: CarouselOptions(
+                        height: 200,
+                        viewportFraction: 1,
+                        autoPlay: true,
+                        autoPlayInterval: const Duration(seconds: 3),
+                        onPageChanged: (index, _) =>
+                            setState(() => currentBanner = index),
+                      ),
+                      items: bannerProducts.map((product) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: Stack(
+                              fit: StackFit.expand,
+                              children: [
+                                Container(
+                                  color: Colors.grey.shade100,
+                                  child: Image.network(
+                                    product.image,
+                                    fit: BoxFit.contain,
+                                    errorBuilder: (_, __, ___) => const Icon(
+                                      Icons.image_not_supported,
+                                      size: 48,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [
+                                        Colors.transparent,
+                                        Colors.black.withOpacity(0.6),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  left: 14,
+                                  bottom: 14,
+                                  right: 14,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 4),
+                                        decoration: BoxDecoration(
+                                          color: Colors.deepPurple,
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                        child: Text(
+                                          product.category.toUpperCase(),
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.bold,
+                                            letterSpacing: 0.8,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 6),
+                                      Text(
+                                        product.title,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      Text(
+                                        '\$${product.price.toStringAsFixed(2)}',
+                                        style: const TextStyle(
+                                          color: Colors.white70,
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                    const SizedBox(height: 10),
+                    // Dot indicators
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: bannerProducts.asMap().entries.map((entry) {
+                        final isActive = currentBanner == entry.key;
+                        return AnimatedContainer(
+                          duration: const Duration(milliseconds: 250),
+                          width: isActive ? 20 : 8,
+                          height: 8,
+                          margin: const EdgeInsets.symmetric(horizontal: 3),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            color: isActive
+                                ? Colors.deepPurple
+                                : Colors.grey.shade300,
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                    const SizedBox(height: 16),
+                    // ── Category Filter ──────────────────────────────────
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        children: categoryMap.keys
+                            .map((label) => _buildCategoryButton(label))
+                            .toList(),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                  ],
                 ),
               ),
-              const SizedBox(height: 16),
-              Expanded(
-                child: filteredProducts.isEmpty
-                    ? const Center(
+
+              // ── Product Grid ─────────────────────────────────────────
+              filteredProducts.isEmpty
+                  ? const SliverFillRemaining(
+                      child: Center(
                         child: Text("No products available in this category."),
-                      )
-                    : GridView.builder(
-                        padding: const EdgeInsets.all(16),
-                        itemCount: filteredProducts.length,
+                      ),
+                    )
+                  : SliverPadding(
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                      sliver: SliverGrid(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            final product = filteredProducts[index];
+                            return ProductCard(
+                              product: product,
+                              isFavorited: favoriteLogic.isFavorited(product),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) =>
+                                        ProductDetail(product: product),
+                                  ),
+                                );
+                              },
+                              onFavorite: () {
+                                final added = context
+                                    .read<FavoriteLogic>()
+                                    .toggleFavorite(product);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      added
+                                          ? '${product.title} added to favorites'
+                                          : '${product.title} removed from favorites',
+                                    ),
+                                    duration: const Duration(seconds: 2),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                          childCount: filteredProducts.length,
+                        ),
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 16,
-                              mainAxisSpacing: 16,
-                              childAspectRatio: 0.65,
-                            ),
-                        itemBuilder: (context, index) {
-                          final product = filteredProducts[index];
-                          return ProductCard(
-                            product: product,
-                            isFavorited: favoriteLogic.isFavorited(product),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) =>
-                                      ProductDetail(product: product),
-                                ),
-                              );
-                            },
-                            onFavorite: () {
-                              final added = context
-                                  .read<FavoriteLogic>()
-                                  .toggleFavorite(product);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    added
-                                        ? '${product.title} added to favorites'
-                                        : '${product.title} removed from favorites',
-                                  ),
-                                  duration: const Duration(seconds: 2),
-                                ),
-                              );
-                            },
-                          );
-                        },
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 16,
+                          childAspectRatio: 0.65,
+                        ),
                       ),
-              ),
+                    ),
             ],
           );
         },
