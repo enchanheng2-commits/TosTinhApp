@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'favorite/favorite_logic.dart';
-import 'async_module/api_provider.dart';
-import 'models/product_model.dart';
-import 'widgets/product_card.dart';
-import 'widgets/dark_mode_toggle_button.dart';
+import '../favorite/favorite_logic.dart';
+import 'api_provider.dart';
+import '../models/product_model.dart';
+import '../widgets/product_card.dart';
+import '../widgets/dark_mode_toggle_button.dart';
 import 'product_detail.dart';
 
 class SearchPage extends StatefulWidget {

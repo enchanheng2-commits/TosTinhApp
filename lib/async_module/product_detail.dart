@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import 'cart/cart_logic.dart';
-import 'cart/cart_page.dart';
-import 'favorite/favorite_badge_button.dart';
-import 'favorite/favorite_logic.dart';
+import '../cart/cart_logic.dart';
+import '../cart/cart_page.dart';
+import '../favorite/favorite_badge_button.dart';
+import '../favorite/favorite_logic.dart';
 import 'favorite_page.dart';
-import 'models/product_model.dart';
-import 'widgets/dark_mode_toggle_button.dart';
-import 'widgets/cart_badge_button.dart';
-import 'widgets/profile_menu_button.dart';
+import '../models/product_model.dart';
+import '../widgets/dark_mode_toggle_button.dart';
+import '../widgets/cart_badge_button.dart';
+import '../widgets/profile_menu_button.dart';
 
 class ProductDetail extends StatefulWidget {
   final ProductModel product;

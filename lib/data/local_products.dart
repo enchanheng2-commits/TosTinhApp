@@ -113,7 +113,7 @@ const List<ProductModel> localProducts = [
     price: 31.0,
     description: 'A set of slim rings made for mixing, matching, and layering.',
     category: 'jewelery',
-    image: 'https://picsum.photos/seed/rings/600/600',
+    image: 'https://jamesmichelle.com/cdn/shop/files/Basic-Stacking-Ring-Set-JM0R010-silver.png?v=1740409368&width=906',
   ),
   ProductModel(
     id: 1204,

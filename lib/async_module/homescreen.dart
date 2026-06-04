@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
-import 'favorite/favorite_logic.dart';
-import 'async_module/api_provider.dart';
-import 'models/product_model.dart';
-import 'widgets/product_card.dart';
-import 'widgets/dark_mode_toggle_button.dart';
+import '../favorite/favorite_logic.dart';
+import 'api_provider.dart';
+import '../models/product_model.dart';
+import '../widgets/product_card.dart';
+import '../widgets/dark_mode_toggle_button.dart';
 import 'product_detail.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -134,14 +134,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Container(
                                   decoration: BoxDecoration(
                                     gradient: LinearGradient(
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                      colors: [
-                                        Colors.transparent,
-                                        Colors.black.withOpacity(0.6),
-                                      ],
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                        colors: [
+                                          Colors.transparent,
+                                          Colors.black.withValues(alpha: 0.6),
+                                        ],
+                                      ),
                                     ),
-                                  ),
                                 ),
                                 Positioned(
                                   left: 14,

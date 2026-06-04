@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import 'auth/auth_logic.dart';
 import 'cart/cart_logic.dart';
 import 'favorite/favorite_logic.dart';
-import 'navbar.dart';
-import 'theme.dart';
+import 'async_module/navbar.dart';
+import 'async_module/theme.dart';
 import 'async_module/dark_login.dart';
 
 Future<void> main() async {

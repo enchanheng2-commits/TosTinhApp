@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import 'favorite/favorite_logic.dart';
-import 'models/product_model.dart';
+import '../favorite/favorite_logic.dart';
+import '../models/product_model.dart';
+import '../widgets/dark_mode_toggle_button.dart';
 import 'product_detail.dart';
-import 'widgets/dark_mode_toggle_button.dart';
 
 class FavoritePage extends StatelessWidget {
   const FavoritePage({super.key});
