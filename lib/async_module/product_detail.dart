@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-
 import '../cart/cart_logic.dart';
 import '../cart/cart_page.dart';
 import '../favorite/favorite_badge_button.dart';
 import '../favorite/favorite_logic.dart';
-import 'favorite_page.dart';
+import '../favorite/favorite_page.dart';
 import '../models/product_model.dart';
 import '../widgets/dark_mode_toggle_button.dart';
 import '../widgets/cart_badge_button.dart';
@@ -14,9 +13,7 @@ import '../widgets/profile_menu_button.dart';
 
 class ProductDetail extends StatefulWidget {
   final ProductModel product;
-
   const ProductDetail({super.key, required this.product});
-
   @override
   State<ProductDetail> createState() => _ProductDetailState();
 }
@@ -63,7 +60,6 @@ class _ProductDetailState extends State<ProductDetail> {
   List<Widget> _buildStars(double rating) {
     final fullStars = rating.floor();
     final hasHalfStar = rating - fullStars >= 0.5;
-
     return List.generate(5, (index) {
       if (index < fullStars) {
         return const Icon(
@@ -72,7 +68,6 @@ class _ProductDetailState extends State<ProductDetail> {
           size: 20,
         );
       }
-
       if (index == fullStars && hasHalfStar) {
         return const Icon(
           Icons.star_half_rounded,
@@ -80,7 +75,6 @@ class _ProductDetailState extends State<ProductDetail> {
           size: 20,
         );
       }
-
       return const Icon(
         Icons.star_border_rounded,
         color: Color(0xFFD9CFEA),
@@ -128,16 +122,8 @@ class _ProductDetailState extends State<ProductDetail> {
     final rating = product.displayRating;
     final reviewCount = product.reviewCount;
     final topGradientColors = isDark
-        ? const [
-            Color(0xFF221733),
-            Color(0xFF17111F),
-            Color(0xFF121212),
-          ]
-        : const [
-            Color(0xFFEAD7FF),
-            Color(0xFFF7F2FF),
-            Color(0xFFF4EDFF),
-          ];
+        ? const [Color(0xFF221733), Color(0xFF17111F), Color(0xFF121212)]
+        : const [Color(0xFFEAD7FF), Color(0xFFF7F2FF), Color(0xFFF4EDFF)];
     final imageCardColor = isDark
         ? colorScheme.surface.withValues(alpha: 0.92)
         : Colors.white.withValues(alpha: 0.72);
@@ -151,10 +137,7 @@ class _ProductDetailState extends State<ProductDetail> {
     final chipBackground = isDark
         ? colorScheme.surfaceContainerHighest.withValues(alpha: 0.9)
         : const Color(0xFFF9F7FF);
-    final buttonBackground = isDark
-        ? colorScheme.primary
-        : Colors.deepPurple;
-
+    final buttonBackground = isDark ? colorScheme.primary : Colors.deepPurple;
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       extendBodyBehindAppBar: true,
@@ -312,8 +295,9 @@ class _ProductDetailState extends State<ProductDetail> {
                           icon: Icons.reviews_rounded,
                           label: '$reviewCount reviews',
                           background: isDark
-                              ? colorScheme.secondaryContainer
-                                  .withValues(alpha: 0.8)
+                              ? colorScheme.secondaryContainer.withValues(
+                                  alpha: 0.8,
+                                )
                               : const Color(0xFFF9F4E8),
                           foreground: isDark
                               ? colorScheme.onSecondaryContainer
@@ -399,8 +383,9 @@ class _ProductDetailState extends State<ProductDetail> {
                             icon: Icons.local_shipping_rounded,
                             label: 'Fast delivery',
                             background: isDark
-                                ? colorScheme.tertiaryContainer
-                                    .withValues(alpha: 0.8)
+                                ? colorScheme.tertiaryContainer.withValues(
+                                    alpha: 0.8,
+                                  )
                                 : const Color(0xFFEFF8F4),
                             foreground: isDark
                                 ? colorScheme.onTertiaryContainer
@@ -413,8 +398,9 @@ class _ProductDetailState extends State<ProductDetail> {
                             icon: Icons.verified_user_rounded,
                             label: 'Secure checkout',
                             background: isDark
-                                ? colorScheme.errorContainer
-                                    .withValues(alpha: 0.8)
+                                ? colorScheme.errorContainer.withValues(
+                                    alpha: 0.8,
+                                  )
                                 : const Color(0xFFFFF2F2),
                             foreground: isDark
                                 ? colorScheme.onErrorContainer

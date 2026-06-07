@@ -7,22 +7,19 @@ import '../auth/register_page.dart';
 import '../cart/cart_page.dart';
 import '../favorite/favorite_logic.dart';
 import '../cart/cart_logic.dart';
-import 'favorite_page.dart';
+import '../favorite/favorite_page.dart';
 import 'homescreen.dart';
 import 'search.dart';
 
 class NavBar extends StatefulWidget {
   const NavBar({super.key});
-
   @override
   State<NavBar> createState() => _NavBarState();
 }
 
 class _NavBarState extends State<NavBar> {
   int currentIndex = 0;
-
   final List<Widget> pages = [const HomeScreen(), const SearchPage()];
-
   void _openCart() {
     Navigator.push(
       context,
@@ -45,7 +42,6 @@ class _NavBarState extends State<NavBar> {
         return Consumer<AuthLogic>(
           builder: (context, auth, _) {
             final currentUser = auth.currentUser;
-
             return SafeArea(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
