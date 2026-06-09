@@ -19,6 +19,8 @@ class ProductDetail extends StatefulWidget {
 }
 
 class _ProductDetailState extends State<ProductDetail> {
+  int _selectedQuantity = 1;
+
   void _openCart() {
     Navigator.push(
       context,
@@ -47,11 +49,29 @@ class _ProductDetailState extends State<ProductDetail> {
     );
   }
 
+  void _increaseQuantity() {
+    setState(() {
+      _selectedQuantity += 1;
+    });
+  }
+
+  void _decreaseQuantity() {
+    if (_selectedQuantity <= 1) {
+      return;
+    }
+
+    setState(() {
+      _selectedQuantity -= 1;
+    });
+  }
+
   void _addToCart(ProductModel product) {
-    context.read<CartLogic>().addProduct(product);
+    context.read<CartLogic>().addProduct(product, quantity: _selectedQuantity);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('${product.title} added to cart'),
+        content: Text(
+          '${product.title} x$_selectedQuantity added to cart',
+        ),
         duration: const Duration(seconds: 2),
       ),
     );
@@ -410,6 +430,46 @@ class _ProductDetailState extends State<ProductDetail> {
                       ],
                     ),
                     const SizedBox(height: 28),
+                    Container(
+                      padding: const EdgeInsets.all(18),
+                      decoration: BoxDecoration(
+                        color: chipBackground,
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                      child: Row(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Quantity',
+                                style: GoogleFonts.manrope(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w800,
+                                  color: titleColor,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Select how many items to buy',
+                                style: GoogleFonts.manrope(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: mutedTextColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Spacer(),
+                          _QuantityStepper(
+                            quantity: _selectedQuantity,
+                            onMinus: _decreaseQuantity,
+                            onPlus: _increaseQuantity,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 18),
                     SizedBox(
                       width: double.infinity,
                       height: 60,
@@ -450,7 +510,9 @@ class _ProductDetailState extends State<ProductDetail> {
                         ),
                         icon: const Icon(Icons.shopping_bag_rounded),
                         label: Text(
-                          'Add To Cart',
+                          _selectedQuantity == 1
+                              ? 'Add To Cart'
+                              : 'Add $_selectedQuantity To Cart',
                           style: GoogleFonts.manrope(
                             fontSize: 18,
                             fontWeight: FontWeight.w800,
@@ -464,6 +526,91 @@ class _ProductDetailState extends State<ProductDetail> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _QuantityStepper extends StatelessWidget {
+  const _QuantityStepper({
+    required this.quantity,
+    required this.onMinus,
+    required this.onPlus,
+  });
+
+  final int quantity;
+  final VoidCallback onMinus;
+  final VoidCallback onPlus;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        _StepperButton(
+          icon: Icons.remove,
+          onPressed: quantity > 1 ? onMinus : null,
+        ),
+        Container(
+          width: 56,
+          margin: const EdgeInsets.symmetric(horizontal: 10),
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.55),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.75),
+            ),
+          ),
+          child: Text(
+            quantity.toString(),
+            textAlign: TextAlign.center,
+            style: GoogleFonts.manrope(
+              fontSize: 16,
+              fontWeight: FontWeight.w800,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+          ),
+        ),
+        _StepperButton(
+          icon: Icons.add,
+          onPressed: onPlus,
+        ),
+      ],
+    );
+  }
+}
+
+class _StepperButton extends StatelessWidget {
+  const _StepperButton({
+    required this.icon,
+    required this.onPressed,
+  });
+
+  final IconData icon;
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final enabled = onPressed != null;
+
+    return SizedBox(
+      width: 42,
+      height: 42,
+      child: Material(
+        color: enabled
+            ? Colors.deepPurple.withValues(alpha: 0.12)
+            : Colors.grey.shade200,
+        borderRadius: BorderRadius.circular(14),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(14),
+          onTap: onPressed,
+          child: Icon(
+            icon,
+            size: 18,
+            color: enabled ? Colors.deepPurple : Colors.grey,
+          ),
         ),
       ),
     );

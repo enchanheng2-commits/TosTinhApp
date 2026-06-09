@@ -192,7 +192,7 @@ class _StartupScreenState extends State<StartupScreen>
                                         ),
                                       ),
                                       Image.asset(
-                                        'lib/logo3_transparent.png',
+                                        'lib/assets/tostinh_logo.png',
                                         width: 280,
                                         fit: BoxFit.contain,
                                       ),

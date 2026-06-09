@@ -70,7 +70,7 @@ class ProductCard extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    '\$${product.price}',
+                    '\$${product.price.toStringAsFixed(2)}',
                     style: GoogleFonts.poppins(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,

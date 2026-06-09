@@ -22,16 +22,34 @@ class CartLogic extends ChangeNotifier {
   int get totalItems =>
       _items.fold<int>(0, (sum, entry) => sum + entry.quantity);
 
-  void addProduct(ProductModel product) {
+  double get totalAmount => _items.fold<double>(
+        0,
+        (sum, entry) => sum + (entry.product.price * entry.quantity),
+      );
+
+  int quantityFor(ProductModel product) {
+    final index = _items.indexWhere((entry) => entry.product.id == product.id);
+    if (index < 0) {
+      return 0;
+    }
+
+    return _items[index].quantity;
+  }
+
+  void addProduct(ProductModel product, {int quantity = 1}) {
+    if (quantity <= 0) {
+      return;
+    }
+
     final index = _items.indexWhere((entry) => entry.product.id == product.id);
     if (index >= 0) {
-      _items[index].quantity += 1;
+      _items[index].quantity += quantity;
       _items[index].lastAddedAt = DateTime.now();
     } else {
       _items.add(
         CartEntry(
           product: product,
-          quantity: 1,
+          quantity: quantity,
           lastAddedAt: DateTime.now(),
         ),
       );
