@@ -120,7 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               fit: StackFit.expand,
                               children: [
                                 Container(
-                                  color: Colors.grey.shade100,
+                                  color: const Color.fromARGB(255, 206, 174, 215),
                                   child: Image.network(
                                     product.image,
                                     fit: BoxFit.contain,
@@ -161,7 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                         child: Text(
                                           product.category.toUpperCase(),
-                                          style: const TextStyle(
+                                          style:  TextStyle(
                                             color: Colors.white,
                                             fontSize: 10,
                                             fontWeight: FontWeight.bold,
@@ -174,7 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         product.title,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
+                                        style:  TextStyle(
                                           color: Colors.white,
                                           fontSize: 15,
                                           fontWeight: FontWeight.w600,
@@ -182,7 +182,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                       Text(
                                         '\$${product.price.toStringAsFixed(2)}',
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           color: Colors.white70,
                                           fontSize: 13,
                                         ),

@@ -142,60 +142,83 @@ class _NavBarState extends State<NavBar> {
     return Scaffold(
       body: pages[currentIndex],
 
-      bottomNavigationBar: NavigationBar(
-        height: 70,
-        selectedIndex: currentIndex,
-        onDestinationSelected: (index) {
-          switch (index) {
-            case 0:
-              setState(() {
-                currentIndex = 0;
-              });
-              break;
-            case 1:
-              setState(() {
-                currentIndex = 1;
-              });
-              break;
-            case 2:
-              _openFavorites();
-              break;
-            case 3:
-              _openCart();
-              break;
-            case 4:
-              _openProfileMenu();
-              break;
-          }
-        },
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.storefront_outlined),
-            selectedIcon: Icon(Icons.storefront),
-            label: "Shop",
-          ),
-
-          NavigationDestination(
-            icon: Icon(Icons.search_outlined),
-            selectedIcon: Icon(Icons.search),
-            label: "Search",
-          ),
-          NavigationDestination(
-            icon: _FavoriteNavIcon(),
-            selectedIcon: _FavoriteNavIcon(active: true),
-            label: "Favorites",
-          ),
-          NavigationDestination(
-            icon: _CartNavIcon(),
-            selectedIcon: _CartNavIcon(active: true),
-            label: "Cart",
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.person_outline_rounded),
-            selectedIcon: Icon(Icons.person_rounded),
-            label: "Profile",
-          ),
-        ],
+      bottomNavigationBar: NavigationBarTheme(
+        data: NavigationBarThemeData(
+          iconTheme: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.selected)) {
+              return const IconThemeData(color: Colors.deepPurple);
+            }
+            return const IconThemeData(color: Colors.white);
+          }),
+          labelTextStyle: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.selected)) {
+              return  TextStyle(
+                color: Colors.deepPurple,
+                fontWeight: FontWeight.w600,
+              );
+            }
+            return  TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            );
+          }),
+        ),
+        child: NavigationBar(
+          backgroundColor: const Color.fromARGB(255, 152, 106, 225),
+          indicatorColor: const Color(0xFFD9C7FF),
+          height: 70,
+          selectedIndex: currentIndex,
+          onDestinationSelected: (index) {
+            switch (index) {
+              case 0:
+                setState(() {
+                  currentIndex = 0;
+                });
+                break;
+              case 1:
+                setState(() {
+                  currentIndex = 1;
+                });
+                break;
+              case 2:
+                _openFavorites();
+                break;
+              case 3:
+                _openCart();
+                break;
+              case 4:
+                _openProfileMenu();
+                break;
+            }
+          },
+          destinations: const [
+            NavigationDestination(
+              icon: Icon(Icons.storefront_outlined),
+              selectedIcon: Icon(Icons.storefront),
+              label: "Shop",
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.search_outlined),
+              selectedIcon: Icon(Icons.search),
+              label: "Search",
+            ),
+            NavigationDestination(
+              icon: _FavoriteNavIcon(),
+              selectedIcon: _FavoriteNavIcon(active: true),
+              label: "Favorites",
+            ),
+            NavigationDestination(
+              icon: _CartNavIcon(),
+              selectedIcon: _CartNavIcon(active: true),
+              label: "Cart",
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.person_outline_rounded),
+              selectedIcon: Icon(Icons.person_rounded),
+              label: "Profile",
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -72,7 +72,7 @@ class _SearchPageState extends State<SearchPage> {
                 hintText: "Search products...",
                 prefixIcon: const Icon(Icons.search),
                 filled: true,
-                fillColor: Theme.of(context).colorScheme.surface,
+               fillColor:  Colors.grey[200],
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(18),
                   borderSide: BorderSide.none,

@@ -8,7 +8,7 @@ const List<ProductModel> localProducts = [
     description:
         'A lightweight everyday backpack with roomy storage and a clean city look.',
     category: 'men\'s clothing',
-    image: 'https://picsum.photos/seed/backpack/600/600',
+    image: 'https://png.pngtree.com/png-vector/20250808/ourmid/pngtree-simple-brown-canvas-backpack-png-image_16728750.webp',
   ),
   ProductModel(
     id: 1002,
@@ -17,7 +17,7 @@ const List<ProductModel> localProducts = [
     description:
         'A relaxed-fit denim jacket that works with casual and streetwear outfits.',
     category: 'men\'s clothing',
-    image: 'https://picsum.photos/seed/denim-jacket/600/600',
+    image: 'https://png.pngtree.com/png-vector/20240805/ourmid/pngtree-denim-jackets-for-every-season-versatile-looks-and-designs-png-image_13392280.png',
   ),
   ProductModel(
     id: 1003,
@@ -26,7 +26,7 @@ const List<ProductModel> localProducts = [
     description:
         'Breathable sneakers designed for all-day comfort and a modern silhouette.',
     category: 'men\'s clothing',
-    image: 'https://picsum.photos/seed/sneakers/600/600',
+    image: 'https://png.pngtree.com/png-vector/20250119/ourmid/pngtree-minimalist-white-sneakers-for-every-occasion-sleek-and-trendy-design-png-image_15270931.png',
   ),
   ProductModel(
     id: 1004,
@@ -35,7 +35,7 @@ const List<ProductModel> localProducts = [
     description:
         'A smooth button-up shirt with a sharp fit for work or weekend wear.',
     category: 'men\'s clothing',
-    image: 'https://picsum.photos/seed/shirt/600/600',
+    image: 'https://static.vecteezy.com/system/resources/thumbnails/027/112/690/small/black-t-shirt-mockup-isolated-on-transparent-background-ai-generative-png.png',
   ),
   ProductModel(
     id: 1005,
@@ -44,7 +44,7 @@ const List<ProductModel> localProducts = [
     description:
         'A warm tailored coat with a clean cut and premium winter feel.',
     category: 'men\'s clothing',
-    image: 'https://picsum.photos/seed/coat/600/600',
+    image: 'https://static.vecteezy.com/system/resources/thumbnails/069/150/921/small/classic-gray-man-s-coat-isolated-on-transparent-background-png.png',
   ),
   ProductModel(
     id: 1101,
@@ -121,7 +121,7 @@ const List<ProductModel> localProducts = [
     price: 27.8,
     description: 'A delicate bracelet with a bright finish for daily wear.',
     category: 'jewelery',
-    image: 'https://picsum.photos/seed/bracelet/600/600',
+    image: 'https://png.pngtree.com/png-vector/20250519/ourmid/pngtree-cute-beaded-bracelet-watercolor-clipart-png-image_16329142.png',
   ),
   ProductModel(
     id: 1205,
@@ -130,7 +130,7 @@ const List<ProductModel> localProducts = [
     description:
         'A bold pendant piece that stands out in a minimal collection.',
     category: 'jewelery',
-    image: 'https://picsum.photos/seed/pendant/600/600',
+    image: 'https://png.pngtree.com/png-vector/20240509/ourmid/pngtree-beautiful-silver-diamond-pendant-isolated-on-transparent-background-generative-ai-png-image_12431973.png',
   ),
   ProductModel(
     id: 1301,
@@ -188,12 +188,12 @@ const List<ProductModel> localProducts = [
   ),
   ProductModel(
     id: 1307,
-    title: 'Pocket Power Bank',
+    title: 'Casual Shirts',
     price: 22.95,
     description:
-        'A compact backup charger that fits easily in a bag or pocket.',
+        'A sharp black dress shirt is incredibly adaptable.',
     category: 'men\'s clothing',
-    image: 'https://static.vecteezy.com/system/resources/thumbnails/057/682/556/small/luxurious-maroon-sweatshirt-a-perfect-wardrobe-essential-photo.jpg',
+    image: 'https://image.mooresclothing.ca/is/image/Moores/65A7_40_AWEARNESS_KENNETH_COLE_SPORT_SHIRTS_BLACK_MAIN?imPolicy=pgp-mob',
   ),
  
   ProductModel(
@@ -201,9 +201,9 @@ const List<ProductModel> localProducts = [
     title: 'white hooded sweatshirt',
     price: 22.95,
     description:
-        'A compact backup charger that fits easily in a bag or pocket.',
+        'minimalist white pullover hoodie, shown from both the front and back views.',
     category: 'men\'s clothing',
-    image: 'https://static.vecteezy.com/system/resources/thumbnails/071/727/440/small/plain-white-hooded-sweatshirt-with-drawstrings-and-front-pocket-free-photo.jpg',
+    image: 'https://png.pngtree.com/png-vector/20260424/ourlarge/pngtree-blank-white-mens-hoodie-sweatshirt-long-sleeve-design-mockup-template-png-image_19174718.webp',
   ),
 
 ];
