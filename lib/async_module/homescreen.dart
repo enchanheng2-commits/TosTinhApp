@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 
 import '../favorite/favorite_logic.dart';
-import 'api_provider.dart';
 import '../models/product_model.dart';
-import '../widgets/product_card.dart';
 import '../widgets/dark_mode_toggle_button.dart';
+import '../widgets/home_banner.dart';
+import '../widgets/home_location_bar.dart';
+import '../widgets/product_card.dart';
+import 'api_provider.dart';
 import 'product_detail.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -19,7 +20,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late final Future<List<ProductModel>> _productsFuture;
   String selectedCategory = 'All Products';
-  int currentBanner = 0;
 
   static const Map<String, String> categoryMap = {
     'All Products': '',
@@ -36,7 +36,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   List<ProductModel> _getBannerProducts(List<ProductModel> products) {
-    final categories = ["men's clothing", "women's clothing", "jewelery", "electronics"];
+    final categories = [
+      "men's clothing",
+      "women's clothing",
+      "jewelery",
+      "electronics",
+    ];
     final List<ProductModel> featured = [];
     for (final cat in categories) {
       final match = products.where((p) => p.category == cat).toList();
@@ -73,7 +78,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Products"),
+        titleSpacing: 0,
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Image.asset(
+              'lib/assets/tostinh_logo.png',
+              height: 160,
+              width: 160,
+              fit: BoxFit.contain,
+            ),
+          ],
+        ),
         actions: const [DarkModeToggleButton()],
       ),
       body: FutureBuilder<List<ProductModel>>(
@@ -97,127 +113,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
           return CustomScrollView(
             slivers: [
-              // ── Banner ────────────────────────────────────────────────
               SliverToBoxAdapter(
                 child: Column(
                   children: [
-                    const SizedBox(height: 16),
-                    CarouselSlider(
-                      options: CarouselOptions(
-                        height: 200,
-                        viewportFraction: 1,
-                        autoPlay: true,
-                        autoPlayInterval: const Duration(seconds: 3),
-                        onPageChanged: (index, _) =>
-                            setState(() => currentBanner = index),
-                      ),
-                      items: bannerProducts.map((product) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(16),
-                            child: Stack(
-                              fit: StackFit.expand,
-                              children: [
-                                Container(
-                                  color: const Color.fromARGB(255, 206, 174, 215),
-                                  child: Image.network(
-                                    product.image,
-                                    fit: BoxFit.contain,
-                                    errorBuilder: (_, __, ___) => const Icon(
-                                      Icons.image_not_supported,
-                                      size: 48,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                        begin: Alignment.topCenter,
-                                        end: Alignment.bottomCenter,
-                                        colors: [
-                                          Colors.transparent,
-                                          Colors.black.withValues(alpha: 0.6),
-                                        ],
-                                      ),
-                                    ),
-                                ),
-                                Positioned(
-                                  left: 14,
-                                  bottom: 14,
-                                  right: 14,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 10, vertical: 4),
-                                        decoration: BoxDecoration(
-                                          color: Colors.deepPurple,
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                        ),
-                                        child: Text(
-                                          product.category.toUpperCase(),
-                                          style:  TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.bold,
-                                            letterSpacing: 0.8,
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 6),
-                                      Text(
-                                        product.title,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style:  TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                      Text(
-                                        '\$${product.price.toStringAsFixed(2)}',
-                                        style: TextStyle(
-                                          color: Colors.white70,
-                                          fontSize: 13,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }).toList(),
+                    HomeLocationBar(
+                      locationLabel: 'National University of Management',
+                      mapUrl:
+                          'https://www.google.com/maps/place/National+University+of+Management/@11.5747699,104.918627,16z/data=!3m1!4b1!4m6!3m5!1s0x310951431e152d17:0x9b79af8befbd4a18!8m2!3d11.5747699!4d104.918627!16s%2Fm%2F0279my9?entry=ttu&g_ep=EgoyMDI2MDYwMy4xIKXMDSoASAFQAw%3D%3D',
                     ),
-                    const SizedBox(height: 10),
-                    // Dot indicators
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: bannerProducts.asMap().entries.map((entry) {
-                        final isActive = currentBanner == entry.key;
-                        return AnimatedContainer(
-                          duration: const Duration(milliseconds: 250),
-                          width: isActive ? 20 : 8,
-                          height: 8,
-                          margin: const EdgeInsets.symmetric(horizontal: 3),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            color: isActive
-                                ? Colors.deepPurple
-                                : Colors.grey.shade300,
-                          ),
-                        );
-                      }).toList(),
-                    ),
+                    HomeBanner(products: bannerProducts),
                     const SizedBox(height: 16),
-                    // ── Category Filter ──────────────────────────────────
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -231,8 +136,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-
-              // ── Product Grid ─────────────────────────────────────────
               filteredProducts.isEmpty
                   ? const SliverFillRemaining(
                       child: Center(
@@ -242,40 +145,37 @@ class _HomeScreenState extends State<HomeScreen> {
                   : SliverPadding(
                       padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                       sliver: SliverGrid(
-                        delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                            final product = filteredProducts[index];
-                            return ProductCard(
-                              product: product,
-                              isFavorited: favoriteLogic.isFavorited(product),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) =>
-                                        ProductDetail(product: product),
+                        delegate: SliverChildBuilderDelegate((context, index) {
+                          final product = filteredProducts[index];
+                          return ProductCard(
+                            product: product,
+                            isFavorited: favoriteLogic.isFavorited(product),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      ProductDetail(product: product),
+                                ),
+                              );
+                            },
+                            onFavorite: () {
+                              final added = context
+                                  .read<FavoriteLogic>()
+                                  .toggleFavorite(product);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    added
+                                        ? '${product.title} added to favorites'
+                                        : '${product.title} removed from favorites',
                                   ),
-                                );
-                              },
-                              onFavorite: () {
-                                final added = context
-                                    .read<FavoriteLogic>()
-                                    .toggleFavorite(product);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      added
-                                          ? '${product.title} added to favorites'
-                                          : '${product.title} removed from favorites',
-                                    ),
-                                    duration: const Duration(seconds: 2),
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                          childCount: filteredProducts.length,
-                        ),
+                                  duration: const Duration(seconds: 2),
+                                ),
+                              );
+                            },
+                          );
+                        }, childCount: filteredProducts.length),
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,

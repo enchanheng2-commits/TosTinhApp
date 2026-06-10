@@ -142,22 +142,22 @@ class _StartupScreenState extends State<StartupScreen>
                               horizontal: 16,
                               vertical: 8,
                             ),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.55),
-                              borderRadius: BorderRadius.circular(999),
-                              border: Border.all(
-                                color: Colors.white.withValues(alpha: 0.45),
-                              ),
-                            ),
-                            child: Text(
-                              'Tos Tinh',
-                              style: Theme.of(context).textTheme.labelLarge
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.w900,
-                                    letterSpacing: 1.8,
-                                    color: colorScheme.primary,
-                                  ),
-                            ),
+                            // decoration: BoxDecoration(
+                            //   color: Colors.white.withValues(alpha: 0.55),
+                            //   borderRadius: BorderRadius.circular(999),
+                            //   border: Border.all(
+                            //     color: Colors.white.withValues(alpha: 0.45),
+                            //   ),
+                            // ),
+                            // child: Text(
+                            //   'Tos Tinh',
+                            //   style: Theme.of(context).textTheme.labelLarge
+                            //       ?.copyWith(
+                            //         fontWeight: FontWeight.w900,
+                            //         letterSpacing: 1.8,
+                            //         color: colorScheme.primary,
+                            //       ),
+                            // ),
                           ),
                         ),
                       ),
