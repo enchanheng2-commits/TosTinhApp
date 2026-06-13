@@ -69,10 +69,33 @@ class _ProductDetailState extends State<ProductDetail> {
     context.read<CartLogic>().addProduct(product, quantity: _selectedQuantity);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          '${product.title} x$_selectedQuantity added to cart',
+        content: Row(
+          children: [
+            const Icon(Icons.shopping_cart_checkout_rounded, size: 20),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                '${product.title}  '
+                'Price: \$${product.price.toStringAsFixed(2)}  '
+                'Qty: $_selectedQuantity  '
+                'Total: \$${(product.price * _selectedQuantity).toStringAsFixed(2)}',
+              ),
+            ),
+          ],
         ),
         duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  void _buyNow(ProductModel product) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => CartPage(
+          checkoutProduct: product,
+          checkoutQuantity: _selectedQuantity,
+        ),
       ),
     );
   }
@@ -495,31 +518,62 @@ class _ProductDetailState extends State<ProductDetail> {
                       ),
                     ),
                     const SizedBox(height: 14),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 60,
-                      child: ElevatedButton.icon(
-                        onPressed: () => _addToCart(product),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: buttonBackground,
-                          foregroundColor: colorScheme.onPrimary,
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: SizedBox(
+                            height: 60,
+                            child: ElevatedButton.icon(
+                              onPressed: () => _buyNow(product),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: highlightBackground,
+                                foregroundColor: colorScheme.primary,
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ),
+                              icon: const Icon(Icons.bolt_rounded),
+                              label: Text(
+                                'Buy Now',
+                                style: GoogleFonts.manrope(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w800,
+                                  color: colorScheme.primary,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                        icon: const Icon(Icons.shopping_bag_rounded),
-                        label: Text(
-                          _selectedQuantity == 1
-                              ? 'Add To Cart'
-                              : 'Add $_selectedQuantity To Cart',
-                          style: GoogleFonts.manrope(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w800,
-                            color: colorScheme.onPrimary,
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: SizedBox(
+                            height: 60,
+                            child: ElevatedButton.icon(
+                              onPressed: () => _addToCart(product),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: buttonBackground,
+                                foregroundColor: colorScheme.onPrimary,
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ),
+                              icon: const Icon(Icons.shopping_bag_rounded),
+                              label: Text(
+                                _selectedQuantity == 1
+                                    ? 'Add To Cart'
+                                    : 'Add $_selectedQuantity To Cart',
+                                style: GoogleFonts.manrope(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w800,
+                                  color: colorScheme.onPrimary,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
                   ],
                 ),
@@ -615,4 +669,5 @@ class _StepperButton extends StatelessWidget {
       ),
     );
   }
+
 }

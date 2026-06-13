@@ -164,7 +164,7 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
           const SizedBox(height: 12),
           Text(
-            'Join now to save favorites, track cart history, and get a smoother shopping experience.',
+            'Join now to save favorites and get a smoother shopping experience.',
             style: GoogleFonts.poppins(
               fontSize: 14.5,
               height: 1.6,

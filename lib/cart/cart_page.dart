@@ -3,9 +3,17 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import 'cart_logic.dart';
+import '../models/product_model.dart';
 
 class CartPage extends StatefulWidget {
-  const CartPage({super.key});
+  const CartPage({
+    super.key,
+    this.checkoutProduct,
+    this.checkoutQuantity = 1,
+  });
+
+  final ProductModel? checkoutProduct;
+  final int checkoutQuantity;
 
   @override
   State<CartPage> createState() => _CartPageState();
@@ -66,6 +74,10 @@ class _CartPageState extends State<CartPage> {
 
   double _rounded(double value) => double.parse(value.toStringAsFixed(2));
 
+  double _checkoutSubtotal(ProductModel product) {
+    return product.price * widget.checkoutQuantity;
+  }
+
   void _handlePayNow(BuildContext context, CartLogic cart) {
     final selectedPayment = _paymentMethods[_selectedPaymentIndex].name;
     final messenger = ScaffoldMessenger.of(context);
@@ -78,7 +90,9 @@ class _CartPageState extends State<CartPage> {
       ),
     );
 
-    cart.clear();
+    if (widget.checkoutProduct == null) {
+      cart.clear();
+    }
   }
 
   @override
@@ -101,10 +115,19 @@ class _CartPageState extends State<CartPage> {
       body: Consumer<CartLogic>(
         builder: (context, cart, _) {
           final subtotal = cart.totalAmount;
-          final taxes = subtotal > 0 ? subtotal * 0.02 : 0.0;
-          final deliveryFees = subtotal > 0 ? 1.50 : 0.0;
-          final total = _rounded(subtotal + taxes + deliveryFees);
-          final hasItems = cart.items.isNotEmpty;
+          final checkoutProduct = widget.checkoutProduct;
+          final checkoutSubtotal = checkoutProduct == null
+              ? 0.0
+              : _rounded(_checkoutSubtotal(checkoutProduct));
+          final activeSubtotal = checkoutProduct == null
+              ? subtotal
+              : checkoutSubtotal;
+          final activeTaxes = activeSubtotal > 0 ? activeSubtotal * 0.02 : 0.0;
+          final activeDeliveryFees = activeSubtotal > 0 ? 1.50 : 0.0;
+          final total = _rounded(
+            activeSubtotal + activeTaxes + activeDeliveryFees,
+          );
+          final hasItems = cart.items.isNotEmpty || checkoutProduct != null;
 
           if (!hasItems) {
             return Center(
@@ -141,6 +164,119 @@ class _CartPageState extends State<CartPage> {
             );
           }
 
+          if (checkoutProduct == null) {
+            return SafeArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 4, 20, 18),
+                    child: Text(
+                      'Your Cart',
+                      style: GoogleFonts.poppins(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: -0.4,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView.separated(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+                      itemCount: cart.items.length,
+                      separatorBuilder: (_, __) => const SizedBox(height: 14),
+                      itemBuilder: (context, index) {
+                        final entry = cart.items[index];
+                        final itemTotal = entry.product.price * entry.quantity;
+
+                        return Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(22),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.05),
+                                blurRadius: 16,
+                                offset: const Offset(0, 8),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(16),
+                                child: Container(
+                                  width: 72,
+                                  height: 72,
+                                  color: Colors.white,
+                                  child: Image.network(
+                                    entry.product.image,
+                                    fit: BoxFit.contain,
+                                    errorBuilder:
+                                        (context, error, stackTrace) {
+                                      return const Icon(
+                                        Icons.image_not_supported_outlined,
+                                        color: Colors.grey,
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 14),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      entry.product.title,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 6),
+                                    Text(
+                                      '\$${entry.product.price.toStringAsFixed(2)}',
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 13,
+                                        color: Colors.grey.shade700,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 6),
+                                    Text(
+                                      'Qty: ${entry.quantity}',
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 13,
+                                        color: Colors.grey.shade700,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      'Item total: ${_money(itemTotal)}',
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w700,
+                                        color: const Color(0xFFE53935),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+
           return SafeArea(
             child: Column(
               children: [
@@ -150,6 +286,61 @@ class _CartPageState extends State<CartPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        if (checkoutProduct != null) ...[
+                          Text(
+                            'Buy Now checkout',
+                            style: GoogleFonts.poppins(
+                              fontSize: 28,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: -0.4,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(18),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(26),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.05),
+                                  blurRadius: 18,
+                                  offset: const Offset(0, 10),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  checkoutProduct.title,
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                _SummaryRow(
+                                  label: 'Unit price',
+                                  value: _money(checkoutProduct.price),
+                                ),
+                                const SizedBox(height: 10),
+                                _SummaryRow(
+                                  label: 'Quantity',
+                                  value: widget.checkoutQuantity.toString(),
+                                ),
+                                const SizedBox(height: 10),
+                                _SummaryRow(
+                                  label: 'Subtotal',
+                                  value: _money(checkoutSubtotal),
+                                  isBold: true,
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 22),
+                        ],
                         Text(
                           'Order summary',
                           style: GoogleFonts.poppins(
@@ -168,13 +359,13 @@ class _CartPageState extends State<CartPage> {
                           ),
                         ),
                         const SizedBox(height: 18),
-                        _SummaryRow(label: 'Order', value: _money(subtotal)),
+                        _SummaryRow(label: 'Order', value: _money(activeSubtotal)),
                         const SizedBox(height: 14),
-                        _SummaryRow(label: 'Taxes', value: _money(taxes)),
+                        _SummaryRow(label: 'Taxes', value: _money(activeTaxes)),
                         const SizedBox(height: 14),
                         _SummaryRow(
                           label: 'Delivery fees',
-                          value: _money(deliveryFees),
+                          value: _money(activeDeliveryFees),
                         ),
                         const SizedBox(height: 14),
                         Divider(color: Colors.grey.shade300, height: 1),

@@ -151,7 +151,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
           const SizedBox(height: 12),
           Text(
-            'Sign in to continue exploring curated products, favorites, and cart history.',
+            'Sign in to continue exploring curated products and favorites.',
             style: GoogleFonts.poppins(
               fontSize: 14.5,
               height: 1.6,
