@@ -290,6 +290,20 @@ class _CartPageState extends State<CartPage> {
                                   ],
                                 ),
                               ),
+                              const SizedBox(width: 8),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 2),
+                                child: IconButton(
+                                  tooltip: 'Remove one',
+                                  onPressed: () {
+                                    cart.removeProduct(entry.product);
+                                  },
+                                  icon: const Icon(Icons.close_rounded),
+                                  splashRadius: 20,
+                                  visualDensity: VisualDensity.compact,
+                                  color: Colors.grey.shade700,
+                                ),
+                              ),
                             ],
                           ),
                         );
