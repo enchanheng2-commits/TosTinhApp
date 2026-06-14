@@ -6,11 +6,7 @@ import 'cart_logic.dart';
 import '../models/product_model.dart';
 
 class CartPage extends StatefulWidget {
-  const CartPage({
-    super.key,
-    this.checkoutProduct,
-    this.checkoutQuantity = 1,
-  });
+  const CartPage({super.key, this.checkoutProduct, this.checkoutQuantity = 1});
 
   final ProductModel? checkoutProduct;
   final int checkoutQuantity;
@@ -171,13 +167,42 @@ class _CartPageState extends State<CartPage> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20, 4, 20, 18),
-                    child: Text(
-                      'Your Cart',
-                      style: GoogleFonts.poppins(
-                        fontSize: 28,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: -0.4,
-                      ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Your Cart',
+                            style: GoogleFonts.poppins(
+                              fontSize: 28,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: -0.4,
+                            ),
+                          ),
+                        ),
+                        if (cart.items.isNotEmpty)
+                          TextButton.icon(
+                            onPressed: () {
+                              cart.clear();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Cart cleared.')),
+                              );
+                            },
+                            icon: const Icon(Icons.delete_outline_rounded),
+                            label: Text(
+                              'Clear all',
+                              style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            style: TextButton.styleFrom(
+                              foregroundColor: const Color(0xFFE53935),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 10,
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                   Expanded(
@@ -214,8 +239,7 @@ class _CartPageState extends State<CartPage> {
                                   child: Image.network(
                                     entry.product.image,
                                     fit: BoxFit.contain,
-                                    errorBuilder:
-                                        (context, error, stackTrace) {
+                                    errorBuilder: (context, error, stackTrace) {
                                       return const Icon(
                                         Icons.image_not_supported_outlined,
                                         color: Colors.grey,
@@ -286,61 +310,59 @@ class _CartPageState extends State<CartPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (checkoutProduct != null) ...[
-                          Text(
-                            'Buy Now checkout',
-                            style: GoogleFonts.poppins(
-                              fontSize: 28,
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: -0.4,
-                            ),
+                        Text(
+                          'Buy Now checkout',
+                          style: GoogleFonts.poppins(
+                            fontSize: 28,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: -0.4,
                           ),
-                          const SizedBox(height: 8),
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(18),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(26),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.05),
-                                  blurRadius: 18,
-                                  offset: const Offset(0, 10),
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  checkoutProduct.title,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-                                _SummaryRow(
-                                  label: 'Unit price',
-                                  value: _money(checkoutProduct.price),
-                                ),
-                                const SizedBox(height: 10),
-                                _SummaryRow(
-                                  label: 'Quantity',
-                                  value: widget.checkoutQuantity.toString(),
-                                ),
-                                const SizedBox(height: 10),
-                                _SummaryRow(
-                                  label: 'Subtotal',
-                                  value: _money(checkoutSubtotal),
-                                  isBold: true,
-                                ),
-                              ],
-                            ),
+                        ),
+                        const SizedBox(height: 8),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(18),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(26),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.05),
+                                blurRadius: 18,
+                                offset: const Offset(0, 10),
+                              ),
+                            ],
                           ),
-                          const SizedBox(height: 22),
-                        ],
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                checkoutProduct.title,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              _SummaryRow(
+                                label: 'Unit price',
+                                value: _money(checkoutProduct.price),
+                              ),
+                              const SizedBox(height: 10),
+                              _SummaryRow(
+                                label: 'Quantity',
+                                value: widget.checkoutQuantity.toString(),
+                              ),
+                              const SizedBox(height: 10),
+                              _SummaryRow(
+                                label: 'Subtotal',
+                                value: _money(checkoutSubtotal),
+                                isBold: true,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 22),
                         Text(
                           'Order summary',
                           style: GoogleFonts.poppins(
@@ -359,7 +381,10 @@ class _CartPageState extends State<CartPage> {
                           ),
                         ),
                         const SizedBox(height: 18),
-                        _SummaryRow(label: 'Order', value: _money(activeSubtotal)),
+                        _SummaryRow(
+                          label: 'Order',
+                          value: _money(activeSubtotal),
+                        ),
                         const SizedBox(height: 14),
                         _SummaryRow(label: 'Taxes', value: _money(activeTaxes)),
                         const SizedBox(height: 14),

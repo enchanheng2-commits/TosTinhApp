@@ -55,7 +55,7 @@ class ProductModel {
     final fallback = 3.7 + ((id % 9) * 0.13);
     return fallback.clamp(3.6, 4.8);
   }
-
+ 
   int get reviewCount {
     if (rating != null) {
       return rating!.count;
